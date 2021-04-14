@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ManagePage</title>
+    <style>
+        strong{
+            color: red;
+            display: inline-flex;
+        }
+        .flex {
+            display: inline-flex;
+        }
+        .deleteButton {
+             width: 120px;
+            height: 30px; 
+            margin-top: 15px;
+            margin-left: 15px;
+            color: rgb(255, 255, 255);
+            background-color: tomato;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="managePage"></div>
+   <script>
+       
+ function LoadAllBooks  ()  {
+      
+            fetch("http://localhost:8080/getAllBooks")
+            .then(res => res.json())
+            .then(books => {
+             
+                const  managePage = document.getElementById('managePage');
+                books.forEach(book => {
+                    const p =  document.createElement('p');
+            
+                    p.innerHTML = ` 
+                     <div class="flex">
+                        <h3> <strong> Book Name : </strong> ${book.name},  <strong> Book Author : </strong> ${book.author}, 
+
+                             <strong> Book Price : </strong>${book.price} </h3>
+                             
+                        <button class="deleteButton" onclick="handleDelete( event, '${book._id}')"> Delete</button>
+                        </div>
+                    `    
+                    managePage.appendChild(p)                
+                });
+            }) 
+           
+        
+}
+    LoadAllBooks();
+   const handleDelete = (event, id) => {
+        fetch(`/deleteItem/${id}`, {
+            method: 'DELETE'
+        })
+            .then(res => res.json())
+            .then(result => {
+                if (result) {
+                    event.target.parentNode.style.display = 'none';
+                }
+            })
+    }
+ 
+   </script>
+</body>
+</html>
